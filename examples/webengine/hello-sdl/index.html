@@ -267,6 +267,11 @@
                 create_window.setDuplicateUpdatesFromWindowID(0);
             }
 
+            let option = document.createElement("option");
+            option.text = "Widget " + widget_counter;
+            option.value = widget_counter;
+            document.getElementById("LayoutWindowId").appendChild(option);
+
             widget_counter++;
 
             app._sdlManager.sendRpcResolve(create_window);
@@ -277,6 +282,9 @@
                 return;
             }
 
+            let LayoutWindowId = document.getElementById("LayoutWindowId");
+            LayoutWindowId.removeChild(LayoutWindowId.lastElementChild);
+            LayoutWindowId.dispatchEvent(new Event('change'));
             widget_counter--;
 
             const delete_window = new SDL.rpc.messages.DeleteWindow();
@@ -285,29 +293,16 @@
             app._sdlManager.sendRpcResolve(delete_window);
         });
 
-        let template_name = 'MEDIA';
         document.getElementById("setLayout").addEventListener("click", function(){
-            switch (template_name) {
-                case 'MEDIA': {
-                    template_name = 'NON-MEDIA';
-                    break;
-                }
-                case 'NON-MEDIA': {
-                    template_name = 'NAV_FULLSCREEN_MAP';
-                    break;
-                }
-                case 'NAV_FULLSCREEN_MAP': {
-                    template_name = 'WEB_ENGINE';
-                    break;
-                }
-                case 'WEB_ENGINE': {
-                    template_name = 'MEDIA';
-                    break;
-                }
-            }
+            const template_name = document.getElementById("LayoutCombo").value;
+            const window_id = document.getElementById("LayoutWindowId").value;
 
             const show_template = new SDL.rpc.messages.Show();
             show_template.setTemplateTitle(template_name);
+
+            if (window_id != "MAIN") {
+                show_template.setWindowID(parseInt(window_id));
+            }
 
             const configuration = new SDL.rpc.structs.TemplateConfiguration();
             configuration.setTemplate(template_name);
@@ -315,6 +310,22 @@
 
             app._sdlManager.sendRpcResolve(show_template);
         });
+
+        document.getElementById("LayoutWindowId").addEventListener('change', (event) => {
+            const items = event.target.value == "MAIN" ?
+                ["DEFAULT", "MEDIA", "NON-MEDIA", "NAV_FULLSCREEN_MAP", "WEB_VIEW"] :
+                ["TEXT_WITH_GRAPHIC", "BUTTONS_WITH_GRAPHIC", "GRAPHIC_WITH_TEXT"];
+
+            var content = "";
+            for (let item of items) {
+                content += "<option>" + item + "</option>";
+            }
+
+            document.getElementById("LayoutCombo").innerHTML = content;
+        });
+
+        // refresh items in layouts combobox
+        document.getElementById("LayoutWindowId").dispatchEvent(new Event('change'));
 
         document.getElementById("showAppMenu").addEventListener("click", function(){
             const show_app_menu = new SDL.rpc.messages.ShowAppMenu();
@@ -362,6 +373,11 @@
         top: 80px;
         left: 5px;">Set Layout
     </button>
+    <select style="position: absolute; top: 80px; left: 100px; width: 80px;"  id="LayoutWindowId">
+        <option selected="">MAIN</option>
+    </select>
+    <select style="position: absolute; top: 80px; left: 185px; width: 185px;" id="LayoutCombo">
+    </select>
     <button id="addWidget" style="
         cursor: pointer;
         position: absolute;
