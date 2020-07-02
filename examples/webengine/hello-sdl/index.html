@@ -86,6 +86,8 @@
                 this._sdlManager
                     .start()
                     .addRpcListener(SDL.rpc.enums.FunctionID.OnHMIStatus, this._onHmiStatusListener.bind(this));
+
+                this._isFirstActivation = true;
             }
 
             async _onConnected () {
@@ -117,6 +119,11 @@
                 const hmiLevel = onHmiStatus.getHmiLevel();
                 console.log('HMI status:', hmiLevel);
                 if (this._hmiLevel === hmiLevel) {
+                    return;
+                }
+
+                if (this._isFirstActivation && hmiLevel === SDL.rpc.enums.HMILevel.HMI_FULL) {
+                    this._isFirstActivation = false;
                     return;
                 }
 
