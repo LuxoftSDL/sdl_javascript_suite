@@ -270,7 +270,7 @@
                          .setWindowName("Test widget " + widget_counter)
                          .setType(SDL.rpc.enums.WindowType.WIDGET);
 
-            if (widget_counter % 2 !== 0) {
+            if (document.getElementById("DuplicateMainWindow").checked) {
                 create_window.setDuplicateUpdatesFromWindowID(0);
             }
 
@@ -391,6 +391,10 @@
         top: 105px;
         left: 5px;">Add Widget
     </button>
+    <input type="checkbox" id="DuplicateMainWindow" style="position: absolute; top: 107px; left: 100px;">
+    <label for="DuplicateMainWindow" style="position: absolute; top: 108px; left: 123px; font-size: 15px; color: white;">
+        Duplicate MAIN window?
+    </label>
     <button id="delWidget" style="
         cursor: pointer;
         position: absolute;
