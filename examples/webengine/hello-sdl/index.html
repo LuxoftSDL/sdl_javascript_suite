@@ -311,6 +311,31 @@
                 show_template.setWindowID(parseInt(window_id));
             }
 
+            const main_field1 = document.getElementById('mainField1').value;
+            show_template.setMainField1(main_field1);
+
+            const main_field2 = document.getElementById('mainField2').value;
+            show_template.setMainField2(main_field2);
+
+            const main_field3 = document.getElementById('mainField3').value;
+            show_template.setMainField3(main_field3);
+
+            const main_field4 = document.getElementById('mainField4').value;
+            show_template.setMainField4(main_field4);
+
+            const btns_count = parseInt(document.getElementById('SoftButtonsCount').value);
+            let soft_buttons = [];
+            for (let i = 0; i < btns_count; ++i) {
+                const soft_button = new SDL.rpc.structs.SoftButton();
+                soft_button
+                    .setSoftButtonID(i)
+                    .setType(SDL.rpc.enums.SoftButtonType.SBT_TEXT)
+                    .setText(String(i + 1));
+                soft_buttons.push(soft_button);
+            }
+
+            show_template.setSoftButtons(soft_buttons);
+
             const configuration = new SDL.rpc.structs.TemplateConfiguration();
             configuration.setTemplate(template_name);
             show_template.setTemplateConfiguration(configuration);
@@ -378,12 +403,30 @@
         cursor: pointer;
         position: absolute;
         top: 80px;
-        left: 5px;">Set Layout
+        left: 5px;">Send Show
     </button>
     <select style="position: absolute; top: 80px; left: 100px; width: 80px;"  id="LayoutWindowId">
         <option selected="">MAIN</option>
     </select>
     <select style="position: absolute; top: 80px; left: 185px; width: 185px;" id="LayoutCombo">
+    </select>
+    <input style="position: absolute; top: 80px; left: 380px; width: 75px;" id="mainField1" placeholder="Field 1">
+    <input style="position: absolute; top: 80px; left: 460px; width: 75px;" id="mainField2" placeholder="Field 2">
+    <input style="position: absolute; top: 80px; left: 540px; width: 75px;" id="mainField3" placeholder="Field 3">
+    <input style="position: absolute; top: 80px; left: 620px; width: 75px;" id="mainField4" placeholder="Field 4">
+    <label style="position: absolute; top: 64px; left: 700px; width: 51px; font-size: 14px; text-align: center; color: white;">
+        Buttons:
+    </label>
+    <select style="position: absolute;top: 80px;left: 700px;width: 50px;" id="SoftButtonsCount">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
     </select>
     <button id="addWidget" style="
         cursor: pointer;
